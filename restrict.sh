@@ -2,7 +2,7 @@
 ## 
 ## a ssh force-command whitelist script for sandflysecurity.com's sandfly(tm)
 ## 
-## version 1.10 // th(at)bogus.net
+## version 1.11 // th(at)bogus.net
 ##
 ## Copyright 2022 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
 ##
@@ -49,9 +49,9 @@ fi
 #	$cmd =~ ^/(bin|usr/bin)/id\ -u$ || \
 #	$cmd =~ ^/(bin|usr/bin)/uname\ -m$ || \
 #	$cmd =~ ^/(bin|usr/bin)/uname$ || \
-#	$cmd =~ ^(|/bin|usr/bin/)touch\ [\'\"][a-f0-9]{10}[\'\"]$ || \
+#	$cmd =~ ^/(bin|usr/bin)/touch\ [\'\"][a-f0-9]{10}[\'\"]$ || \
 #	$cmd =~ ^/(bin|usr/bin)/rm\ [\'\"][a-f0-9]{10}[\'\"]$ || \
-#	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"](|/bin|/usr/bin/)touch\ [a-f0-9]{10}[\'\"]$ || \
+#	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]/(bin|usr/bin)/touch\ [a-f0-9]{10}[\'\"]$ || \
 #	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]/(bin|usr/bin)/rm\ [a-f0-9]{10}[\'\"]$ || \
 #	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]+cd\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}\;[\ ]*$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/(sandfly|botfly)[\-\ a-z0-9]+[\'\"]$ || \
 #	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]+$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/(sandfly|botfly)\ -x\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}[\'\"]$ || \
@@ -64,9 +64,9 @@ if [[ $cmd =~ ^/usr/lib/openssh/sftp-server$ || \
 	$cmd =~ ^/(bin|usr/bin)/id\ -u$ || \
 	$cmd =~ ^/(bin|usr/bin)/uname\ -m$ || \
 	$cmd =~ ^/(bin|usr/bin)/uname$ || \
-	$cmd =~ ^(|/bin|usr/bin/)touch\ [\'\"][a-f0-9]{10}[\'\"]$ || \
+	$cmd =~ ^/(bin|usr/bin)/touch\ [\'\"][a-f0-9]{10}[\'\"]$ || \
 	$cmd =~ ^/(bin|usr/bin)/rm\ [\'\"][a-f0-9]{10}[\'\"]$ || \
-	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"](|/bin|/usr/bin/)touch\ [a-f0-9]{10}[\'\"]$ || \
+	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]/(bin|usr/bin)/touch\ [a-f0-9]{10}[\'\"]$ || \
 	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]/(bin|usr/bin)/rm\ [a-f0-9]{10}[\'\"]$ || \
 	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]+cd\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}\;[\ ]*$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/sandfly[\-\ a-z0-9]+[\'\"]$ || \
 	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]+$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/sandfly\ -x\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}[\'\"]$ || \
