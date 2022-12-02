@@ -36,7 +36,8 @@ else
 #:	if [[ $cmd =~ ^sudo.*(sandfly|botfly).*$ ]]
 	if [[ $cmd =~ ^sudo.*sandfly.*$ ]]
 	then
-		logger "$(basename $0) fail: can't determine dir: $cmd"
+		logger "$(basename $0) fail: can't determine directory"
+# debug		logger "$(basename $0) fail: can't determine dir: $cmd"		
 		exit 1
 	fi
 fi
@@ -94,6 +95,7 @@ then
 		exit
 	fi
 else
-	logger "$(basename $0) didn't pass whitelist: $cmd"
+	logger "$(basename $0) didn't pass command whitelist or hash check"
+# debug	logger "$(basename $0) didn't pass whitelist: $cmd"
 	exit 1
 fi
