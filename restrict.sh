@@ -43,7 +43,7 @@ else
 fi
 
 #: run through whitelist check of commands (default binary name + "botfly"; match your setup!)
-#if [[ $cmd =~ ^/usr/lib/openssh/sftp-server$ || \
+#if [[ $cmd =~ ^/usr/(lib|libexec)/openssh/sftp-server$ || \
 #	$cmd =~ ^pwd$ || \
 #	$cmd =~ ^(sudo\ )/bin/sh\ -c\ \"(/bin|/usr/bin)/whoami\"$ || \
 #	$cmd =~ ^/(bin|usr/bin)/id$ || \
@@ -58,7 +58,7 @@ fi
 #	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]+$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/(sandfly|botfly)\ -x\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}[\'\"]$ || \
 #	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]+$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/(sandfly|botfly)\ -k\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/sandfly\.pid[\'\"]$ ]]
 
-if [[ $cmd =~ ^/usr/lib/openssh/sftp-server$ || \
+if [[ $cmd =~ ^/usr/(lib|libexec)/openssh/sftp-server$ || \
 	$cmd =~ ^pwd$ || \
 	$cmd =~ ^(sudo\ )/bin/sh\ -c\ \"(/bin|/usr/bin)/whoami\"$ || \
 	$cmd =~ ^/(bin|usr/bin)/id$ || \
