@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ## 
 ## a ssh force-command whitelist script for sandflysecurity.com's sandfly(tm)
 ## 
-## version 1.13 // th(at)bogus.net
+## version 1.15 // th(at)bogus.net
 ##
 ## Copyright 2022 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
 ##
@@ -16,13 +16,15 @@
 ##
 sfbinnames="sandfly|botfly"
 
-## @sandflysecurity: would be awesome if you posted the sha256sums of your binaries somewhere!
+## the external commands cat, basename, logger and sha512sum should be found here
 ##
-## list of valid hashes (might need expanding depending on your install)
+PATH="/usr/bin:/bin"
+
+## list of valid hashes (might need expanding depending on your cpu architectures); these are aarch64 and amd64 for v4.3.2
+##
 vhashes=$(cat <<EOF
-e53f43e2bfc701f631e29db8c940e2bf725fe0639a48c1b01b87df843c4d2c2e
-5c2d3e8f8e5ce35162499550c94a7f08301dafd2a16acf51178f38e10d5ab1b2
-4ddcd0c5ce35fd87696265f45128398a7bea0c49245b3b4c1597887eba18942d
+2143104a62ac1b75ae5f7f2632f3809636cef6e4e09f3d879db53194662ec62c638f4046b68bdc8c32a7a2095a5ae099b4d0d9578322af9950714d0e55970cab
+2618fc110b297c152ac12bc8fe678380fffad68e7ad2e9286657cff9618dd6be21ed7f93abb6c0fa03c7fb0a27349e15d07779fad8594a1a1dc721dba6d17622
 EOF
 )
 
@@ -35,7 +37,6 @@ else
 	if [[ $cmd =~ ^sudo.*($sfbinnames).*$ ]]
 	then
 		logger "$(basename $0) fail: can't determine directory"
-## debug		logger "$(basename $0) fail: can't determine dir: $cmd"		
 		exit 1
 	fi
 fi
@@ -56,11 +57,10 @@ if [[ $cmd =~ ^/usr/(lib|libexec)/openssh/sftp-server$ || \
 	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]+$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($sfbinnames)\ -x\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}[\'\"]$ || \
 	$cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]+$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($sfbinnames)\ -k\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/sandfly\.pid[\'\"]$ ]]
 then
-
 	if [[ $cmd =~ ^sudo.*($sfbinnames).*$ ]]
 	then
 		sfbinaryname=${BASH_REMATCH[1]}
-		if [[ `/usr/bin/sha256sum $dir/$sfbinaryname` =~ ^([0-9a-f]{64}).*$ ]]
+		if [[ $(sha512sum $dir/$sfbinaryname) =~ ^([0-9a-f]{128}).*$ ]]
 		then
 			sfhash=${BASH_REMATCH[1]}
 			for hash in $vhashes
@@ -71,13 +71,14 @@ then
 					exit 0
 				fi
 			done
+			logger "$(basename $0) $sfbinaryname didn't pass hash check"
+			exit 1
 		fi
 	else
 		eval $cmd
 		exit 0
 	fi
 else
-	logger "$(basename $0) didn't pass command whitelist or hash check"
-## debug	logger "$(basename $0) didn't pass whitelist: $cmd"
+	logger "$(basename $0) input didn't pass command whitelist"
 	exit 1
 fi
