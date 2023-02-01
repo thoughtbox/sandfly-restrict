@@ -1,13 +1,4 @@
 #!/usr/bin/env bash
-<<<<<<< HEAD
-=======
-## 
-## a ssh force-command whitelist script for sandflysecurity.com's sandfly(tm)
-## 
-## version 1.15 // th(at)bogus.net
-##
-## Copyright 2022 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
->>>>>>> 2688571089886057d18e7a7794cf2768be4389d5
 ##
 ## a ssh force-command whitelist script for sandflysecurity.com's sandfly(tm)
 ##
@@ -16,7 +7,6 @@
 ## Copyright 2023 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
 ##
 
-<<<<<<< HEAD
 ## Update this variable if your Agent Binary Names setting in the
 ## Server Configuration is not using the default 'sandfly' value.
 ## For multiple names this value must be in this format: NAME1|NAME2|NAME3
@@ -26,21 +16,8 @@ agentbinarynames="botfly|sandfly"
 sftpserverpath="/usr/(lib|libexec)/openssh/sftp-server"
 
 ## Update this variable to reflect the paths to these external commands:
-##   cat, basename, logger, sha512sum, awk
+##   cat, basename, logger, sha512sum
 PATH="/usr/bin:/bin"
-=======
-## the external commands cat, basename, logger and sha512sum should be found here
-##
-PATH="/usr/bin:/bin"
-
-## list of valid hashes (might need expanding depending on your cpu architectures); these are aarch64 and amd64 for v4.3.2
-##
-vhashes=$(cat <<EOF
-2143104a62ac1b75ae5f7f2632f3809636cef6e4e09f3d879db53194662ec62c638f4046b68bdc8c32a7a2095a5ae099b4d0d9578322af9950714d0e55970cab
-2618fc110b297c152ac12bc8fe678380fffad68e7ad2e9286657cff9618dd6be21ed7f93abb6c0fa03c7fb0a27349e15d07779fad8594a1a1dc721dba6d17622
-EOF
-)
->>>>>>> 2688571089886057d18e7a7794cf2768be4389d5
 
 cmd="$SSH_ORIGINAL_COMMAND"
 
@@ -63,19 +40,11 @@ if [[ $cmd =~ ^.+?($HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}).+$ ]]
 then
     dir=${BASH_REMATCH[1]}
 else
-<<<<<<< HEAD
     if [[ $cmd =~ ^(.+)??sudo\ (-S\ )??\/bin\/sh\ -c\ [\'\"].+\/${agentbinarynames}\ .+[\'\"]$ ]]
     then
         logger "$(basename $0) fail: can not determine directory"
         exit 1
     fi
-=======
-	if [[ $cmd =~ ^sudo.*($sfbinnames).*$ ]]
-	then
-		logger "$(basename $0) fail: can't determine directory"
-		exit 1
-	fi
->>>>>>> 2688571089886057d18e7a7794cf2768be4389d5
 fi
 
 # perform command whitelist check
@@ -94,7 +63,6 @@ if [[ $cmd =~ ^pwd$ || \
     $cmd =~ ^echo\ [\'\"]DATA_START\ [a-f0-9]{32}[\'\"]\ \&\&\ sudo\ -S\ /bin/sh\ -c\ [\'\"]$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/${agentbinarynames}\ \-x\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}[\'\"]\ \&\&\ echo\ [\'\"]DATA_END\ [a-f0-9]{32}[\'\"]$ || \
     $cmd =~ ^$sftpserverpath$ ]]
 then
-<<<<<<< HEAD
     # perform a hash comparison when using sudo along with a valid agent
     if [[ $cmd =~ ^(echo\ .+\ )??sudo\ .+\/(${agentbinarynames})\ .+?$ ]]
     then
@@ -122,30 +90,4 @@ else
     # Log event and exit if no valid commands were matched
     logger "$(basename $0) fail: input did not pass command whitelist"
     exit 1
-=======
-	if [[ $cmd =~ ^sudo.*($sfbinnames).*$ ]]
-	then
-		sfbinaryname=${BASH_REMATCH[1]}
-		if [[ $(sha512sum $dir/$sfbinaryname) =~ ^([0-9a-f]{128}).*$ ]]
-		then
-			sfhash=${BASH_REMATCH[1]}
-			for hash in $vhashes
-			do
-				if [[ $hash == $sfhash ]]
-				then
-					eval $cmd
-					exit 0
-				fi
-			done
-			logger "$(basename $0) $sfbinaryname didn't pass hash check"
-			exit 1
-		fi
-	else
-		eval $cmd
-		exit 0
-	fi
-else
-	logger "$(basename $0) input didn't pass command whitelist"
-	exit 1
->>>>>>> 2688571089886057d18e7a7794cf2768be4389d5
 fi
