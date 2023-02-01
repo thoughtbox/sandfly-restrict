@@ -1,5 +1,5 @@
 # very short intro
-Sandfly is a Linux security product (see https://sandflysecurity.com).
+Sandfly is a Linux security product (see https://sandflysecurity.com); this script attempts to reduce admin paranoia.
 
 # sandfly-restrict
 An ssh force-command script that adds additional controls to the "sandfly" user's execution environment. In addition to 
