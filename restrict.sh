@@ -2,7 +2,7 @@
 ##
 ## a ssh force-command whitelist script for sandflysecurity.com's sandfly(tm)
 ##
-## version 1.20 // th(at)bogus.net
+## version 1.21 // th(at)bogus.net
 ##
 ## Copyright 2023 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
 ##
@@ -16,7 +16,7 @@ agentbinarynames="botfly|sandfly"
 sftpserverpath="/usr/(lib|libexec)/openssh/sftp-server"
 
 ## Update this variable to reflect the paths to these external commands:
-##   cat, basename, logger, sha512sum
+##   cat, basename, logger, sha512sum, awk
 PATH="/usr/bin:/bin"
 
 cmd="$SSH_ORIGINAL_COMMAND"
@@ -42,28 +42,19 @@ then
 else
     if [[ $cmd =~ ^(.+)??sudo\ (-S\ )??\/bin\/sh\ -c\ [\'\"].+\/${agentbinarynames}\ .+[\'\"]$ ]]
     then
-        logger "$(basename $0) fail: can not determine directory"
+        logger "$(basename $0) fail: cannot determine directory"
         exit 1
     fi
 fi
 
-# perform command whitelist check
 if [[ $cmd =~ ^pwd$ || \
     $cmd =~ ^echo\ \"DATA_START\ [a-f0-9]{32}\"\ &&\ echo\ \"\w+=\`\/usr\/bin\/id\ -u\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`\/bin\/id\ -u\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`id\ -u\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`\/bin\/uname\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`\/usr\/bin\/uname\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`uname\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`\/bin\/uname\ -m\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`\/usr\/bin\/uname\ -m\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`uname\ -m\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`\/usr\/bin\/pwd\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`\/bin\/pwd\ 2\>\/dev\/null\`\"\;echo\ \"\w+=\`pwd\ 2\>\/dev\/null\`\"\ &&\ echo\ \"DATA_END\ [a-f0-9]{32}\"$ || \
-    $cmd =~ ^(sudo\ )?/bin/sh\ -c\ [\'\"](/bin/|/usr/bin/)?whoami[\'\"]$ || \
-    $cmd =~ ^(/bin/|/usr/bin/)?id( -u)?$ || \
-    $cmd =~ ^(/bin/|/usr/bin/)?uname( -m)?$ || \
-    $cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"](/bin/|/usr/bin/)?touch\ [0-9a-fA-F]{10}[\'\"]$ || \
-    $cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"](/bin/|/usr/bin/)?rm\ [0-9a-fA-F]{10}[\'\"]$ || \
-    $cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]cd\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}\;[\ ]*$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/${agentbinarynames}\ (\-l\ )?\-\z\ [0-9]\ \-t\ [0-9]\ \-n\ (\-)?[0-9]{1,2}\ \-i(\ )?[\'\"]$ || \
-    $cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/${agentbinarynames}\ \-x\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}[\'\"]$ || \
-    $cmd =~ ^sudo\ /bin/sh\ -c\ [\'\"]$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/${agentbinarynames}\ \-k\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/sandfly\.pid[\'\"]$ || \
     $cmd =~ ^echo\ [\'\"]DATA_START\ [a-f0-9]{32}[\'\"]\ \&\&\ sudo\ -S\ /bin/sh\ -c\ [\'\"](/bin/|/usr/bin/)?id[\'\"]\ \&\&\ echo\ [\'\"]DATA_END\ [a-f0-9]{32}[\'\"]$ || \
-    $cmd =~ ^echo\ [\'\"]DATA_START\ [a-f0-9]{32}[\'\"]\ \&\&\ sudo\ -S\ /bin/sh\ -c\ [\'\"]cd\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}\;[\ ]*$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/${agentbinarynames}\ (\-l\ )?\-\z\ [0-9]\ \-t\ [0-9]\ \-n\ (\-)?[0-9]{1,2}\ \-i(\ )?[\'\"]\ \&\&\ echo\ [\'\"]DATA_END\ [a-f0-9]{32}[\'\"]$ || \
-    $cmd =~ ^echo\ [\'\"]DATA_START\ [a-f0-9]{32}[\'\"]\ \&\&\ sudo\ -S\ /bin/sh\ -c\ [\'\"]$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/${agentbinarynames}\ \-x\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}[\'\"]\ \&\&\ echo\ [\'\"]DATA_END\ [a-f0-9]{32}[\'\"]$ || \
+    $cmd =~ ^echo\ [\'\"]DATA_START\ [a-f0-9]{32}[\'\"]\ \&\&\ sudo\ -S\ /bin/sh\ -c\ [\'\"]cd\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}\;\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/${agentbinarynames}\ (\-l\ )?\-\z\ [0-9]\ \-t\ [0-9]\ \-n\ (\-)?[0-9]{1,2}\ \-i(\ )?[\'\"]\ \&\&\ echo\ [\'\"]DATA_END\ [a-f0-9]{32}[\'\"]$ || \
+    $cmd =~ ^echo\ [\'\"]DATA_START\ [a-f0-9]{32}[\'\"]\ \&\&\ sudo\ -S\ /bin/sh\ -c\ [\'\"]$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/${agentbinarynames}\ \-x\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}[\'\"]\ \&\&\ echo\ [\'\"]DATA_END\ [a-f0-9]{32}[\'\"]$ || 
+    $cmd =~ ^echo\ [\'\"]DATA_START\ [a-f0-9]{32}[\'\"]\ \&\&\ sudo\ -S\ /bin/sh\ -c\ [\'\"]$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/sandfly\ \-k\ $HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/sandfly\.pid[\'\"]\ \&\&\ echo\ [\'\"]DATA_END\ [a-f0-9]{32}[\'\"]$ || \
     $cmd =~ ^$sftpserverpath$ ]]
 then
-    # perform a hash comparison when using sudo along with a valid agent
     if [[ $cmd =~ ^(echo\ .+\ )??sudo\ .+\/(${agentbinarynames})\ .+?$ ]]
     then
         agentbinaryname=${BASH_REMATCH[2]}
@@ -78,7 +69,6 @@ then
                     exit 0
                 fi
             done
-            # Log event and exit if no valid hashes were matched
             logger "$(basename $0) fail: $agentbinaryname agent did not pass hash check"
             exit 1
         fi
@@ -87,7 +77,6 @@ then
         exit 0
     fi
 else
-    # Log event and exit if no valid commands were matched
     logger "$(basename $0) fail: input did not pass command whitelist"
     exit 1
 fi
