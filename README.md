@@ -13,9 +13,17 @@ no-port-forwarding,no-user-rc,no-X11-forwarding_, like so:
 mcfly@test:~$ cat .ssh/authorized_keys
 command="/usr/local/bin/restrict.sh",no-agent-forwarding,no-port-forwarding,no-user-rc,no-X11-forwarding ssh-ed25519 AAAA.....eO mcfly@test
 ```
+Additional admin paranoia can be reduced through host-based means such as TCP wrappers, iptables and/or by limiting which hosts that can log in to the "sandfly" user account. The latter can be achieved by prepending a _from=_ option to the above _authorized_keys_ entry. For example, if your Sandfly nodes are on 172.16.16.0/29, your _authorized_keys_ file should look like:
+```
+mcfly@test:~$ cat .ssh/authorized_keys
+from="172.16.16.0/29",command="/usr/local/bin/restrict.sh",no-agent-forwarding,no-port-forwarding,no-user-rc,no-X11-forwarding ssh-ed25519 AAAA.....eO mcfly@test
+```
 # read the fine script
 Recent versions of Sandfly support the use of random binary names to reduce detection. If you use this feature, this script requires 
 some tweaking of the regular expression matching (look for "botfly" within the script and take it from there). 
+
+# compatibility
+This version has been tested to work with Sandfly v4.3.0. It will not work with previous versions.
 
 # end note
 I have no affiliation with Sandfly, Inc.; I merely find the product interesting.
