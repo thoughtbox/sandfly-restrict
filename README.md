@@ -23,7 +23,7 @@ Recent versions of Sandfly support the use of random binary names to reduce dete
 some tweaking of the regular expression matching (look for "botfly" within the script and take it from there). 
 
 # compatibility
-This version has been tested to work with Sandfly v4.3.0. It will not work with previous versions.
+This version has been tested to work with Sandfly v4.3.1, AKA "it works for me". It will not work with previous versions.
 
 # end note
 I have no affiliation with Sandfly, Inc.; I merely find the product interesting.
