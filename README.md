@@ -3,7 +3,7 @@ Sandfly is a Linux security product (see https://sandflysecurity.com); this scri
 
 # sandfly-restrict
 An ssh force-command script that adds additional controls to the "sandfly" user's execution environment. In addition to 
-whitelisting of commands using regular expressions, the script will also verify the sha256sum of the "sandfly" binary.
+whitelisting of commands using regular expressions, the script will also verify the sha512sum of the "sandfly" binary.
 
 # usage
 Put restrict.sh in an appropriate directory (_/usr/local/bin_) with appropriate permissions (e.g. _chmod 755_). 
