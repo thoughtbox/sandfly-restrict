@@ -2,7 +2,7 @@
 ##
 ## a ssh force-command whitelist script for sandflysecurity.com's sandfly(tm)
 ##
-## version 1.3 // th(at)bogus.net
+## version 1.30 // th(at)bogus.net
 ##
 ## Copyright 2023 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
 ##
