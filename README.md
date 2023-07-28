@@ -25,6 +25,9 @@ some tweaking of the regular expression matching (look for "botfly" within the s
 # new in version 1.40
 The script will start _/usr/lib/openssh/sftp-server_ if the host is configured to use internal-sftp in _/etc/sshd_config_. You may need to change this to reflect your setup.
 
+# whitelist the "user_ssh_authorized_keys_options_command_present"
+Since version 4.5.0 of Sandfly, an alert will be triggered for the above _authorized_keys_ example because "command=" is present. Your first order of business should either be to change _sshd_config_ (create a "Match" block for that user with a ForceCommand entry), or create a whitelist for the sha512sum of the _authorized_keys_ file.
+
 # compatibility
 This version has been tested to work with Sandfly v4.6.0, AKA "it works for me". 
 
