@@ -22,8 +22,11 @@ from="172.16.16.0/29",command="/usr/local/bin/restrict.sh",no-agent-forwarding,n
 Recent versions of Sandfly support the use of random binary names to reduce detection. If you use this feature, this script requires 
 some tweaking of the regular expression matching (look for "botfly" within the script and take it from there). 
 
+# new in version 1.40
+The script will start _/usr/lib/libexec/sftp-server_ if the host is configured to use internal-sftp in _/etc/sshd_config_.
+
 # compatibility
-This version has been tested to work with Sandfly v4.5, AKA "it works for me". It will not necessarily work with previous versions.
+This version has been tested to work with Sandfly v4.6.0, AKA "it works for me". 
 
 # end note
 I have no affiliation with Sandfly, Inc.; I merely find the product interesting.
