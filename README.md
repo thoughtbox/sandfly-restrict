@@ -32,4 +32,4 @@ Since version 4.5.0 of Sandfly, an alert will be triggered for the above _author
 This version has been tested to work with Sandfly v4.6.1, AKA "it works for me". 
 
 # end note
-I have no affiliation with Sandfly, Inc.; I merely find the product interesting.
+I have no affiliation with Sandfly Security, Ltd.; I merely find the product interesting.
