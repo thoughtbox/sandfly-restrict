@@ -29,7 +29,7 @@ The script will start _/usr/lib/openssh/sftp-server_ if the host is configured t
 Since version 4.5.0 of Sandfly, an alert will be triggered for the above _authorized_keys_ example because "command=" is present. Your first order of business should either be to change _sshd_config_ (create a "Match" block for that user with a ForceCommand entry), or create a whitelist for the sha512sum of the _authorized_keys_ file.
 
 # compatibility
-This version has been tested to work with Sandfly v4.6.0, AKA "it works for me". 
+This version has been tested to work with Sandfly v4.6.1, AKA "it works for me". 
 
 # end note
 I have no affiliation with Sandfly, Inc.; I merely find the product interesting.
