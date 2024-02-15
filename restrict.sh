@@ -2,7 +2,7 @@
 ##
 ## a ssh force-command whitelist script for sandflysecurity.com's sandfly(tm)
 ##
-## version 5.0.4.1 // th(at)bogus.net
+## version 5.0.4.2 // th(at)bogus.net
 ##
 ## Copyright 2024 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
 ##
@@ -46,7 +46,7 @@ function validate () {
     rex_6="^(|/bin/|/usr/bin/)cat\s+>\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s+&&\s+chmod\s+500\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s*$"
     rex_7="^LANG=C\s+sudo\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+.cd\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}..\s+&&\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames)..\s+.[-\ a-z0-9]+.\s*$"
     rex_8="^cd\s+.$HOME.\s+&&\s+.(|/bin/|/usr/bin/)ls.\s+-1d\s+[ TZ.a-f0-9/]+\s*$"
-    rex_9="^LANG=C\s+sudo\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s+-x\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}..\s*$"
+    rex_9="^LANG=C\s+sudo\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s+-x\s+.(|$HOME/)[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}..\s*$"
     rex_10="^LANG=C\s+sudo\s+-S\s+(|/bin/|/usr/bin/)id\s*$"
     rex_11="^LANG=C\s+sudo\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+..(|/bin/|/usr/bin/|)rm.\s+-rf\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}.."
     if [[ $input =~ $rex_1 || $input =~ $rex_2 || $input =~ $rex_3 || $input =~ $rex_4 ||$input =~ $rex_5 ||

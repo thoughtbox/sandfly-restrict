@@ -22,7 +22,7 @@ from="172.16.16.0/29",command="/usr/local/bin/restrict.sh",no-agent-forwarding,n
 Recent versions of Sandfly support the use of random binary names to reduce detection. If you use this feature, this script requires 
 some tweaking of the regular expression matching (look for "botfly" within the script and take it from there). 
 
-# new in version 1.5.0.4
+# new in version 5.0.4.1
 Since 5.0.4, Sandfly no longer uses sftp to copy the binary across, so all previous references to sftp have been removed. The versioning of this script now reflects the Sandfly version it supports.
 
 # compatibility
