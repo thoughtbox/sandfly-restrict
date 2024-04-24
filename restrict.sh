@@ -2,7 +2,7 @@
 ##
 ## a ssh force-command whitelist script for sandflysecurity.com's sandfly(tm)
 ##
-## version 5.0.5.1 // th(at)bogus.net
+## version 5.0.5.2 // th(at)bogus.net
 ##
 ## Copyright 2024 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
 ##
@@ -11,7 +11,7 @@
 agentbinarynames=$(echo botfly,sandfly | tr "," "|")
 
 ## Update this variable to reflect the paths to these external commands:
-## cat, basename, logger, sha512sum, awk, sed, tr
+## cat, basename, logger, sha512sum, awk, tr
 PATH="/usr/bin:/bin"
 
 ## list of valid hashes (ref. https://github.com/sandflysecurity/sandfly-setup/blob/master/sandfly.agent.sha512.txt);
@@ -32,10 +32,11 @@ bf3c5a247bf19b52ba02afefa9c6170bb6a736917a98a367f81733a53ddfbc9418deb8ea1a7562d8
 EOF
 )
 
-## (I know, now I have two problems.)
-cmd=$(cat <<< "$SSH_ORIGINAL_COMMAND" | sed 's/\t//g' | sed 's/| \\/|/g' | sed 's/sh \\/sh/g')
-exec_cmd=$(echo $cmd | sed 's/ \\ echo/echo/g')
-cmd=$(echo $cmd | tr ';' '\n' | sed 's/ \\ /\n/g')
+cmd="${SSH_ORIGINAL_COMMAND//$'\t'/}"
+cmd="${cmd//\| \\$'\n'/| }"
+cmd="${cmd//sh \\$'\n'/sh }"
+exec_cmd="${cmd// \\ echo/echo}"
+cmd="${cmd//; \\/}"
 
 function validate () {
     input=$1
@@ -66,7 +67,7 @@ do
     if [[ ! $line == "" ]]; then
         validate "$line"
     fi
-done <<< $cmd
+done <<< "$cmd"
 
 if [[ $cmd =~ sudo.*($HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16})/($agentbinarynames) ]]
 then
@@ -79,7 +80,7 @@ then
         do
             if [[ $hash == $checksumhash ]]
             then
-                eval $exec_cmd
+                eval "$exec_cmd"
                 exit 0
             fi
         done
@@ -87,6 +88,6 @@ then
         exit 1
     fi
 else
-    eval $exec_cmd
+    eval "$exec_cmd"
     exit 0
 fi
