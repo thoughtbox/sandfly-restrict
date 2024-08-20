@@ -26,7 +26,7 @@ some tweaking of the regular expression matching (look for "botfly" within the s
 Since 5.0.4, Sandfly no longer uses sftp to copy the binary across, so all previous references to sftp have been removed. The versioning of this script now reflects the Sandfly version it supports.
 
 # compatibility
-This version has been tested to work with Sandfly version 5.0.5; AKA "it works for me". 
+This version has been tested to work with Sandfly version 5.1.1; AKA "it works for me". 
 
 # end note
 I have no affiliation with Sandfly Security, Ltd.; I merely find the product interesting.
