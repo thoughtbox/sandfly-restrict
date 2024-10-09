@@ -2,7 +2,7 @@
 ##
 ## a ssh force-command whitelist script for sandflysecurity.com's sandfly(tm)
 ##
-## version 5.1.1.0 // th(at)bogus.net
+## version 5.2.0.0 // th(at)bogus.net
 ##
 ## Copyright 2024 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
 ##
@@ -16,59 +16,69 @@ PATH="/usr/bin:/bin"
 
 ## list of valid hashes (ref. https://github.com/sandflysecurity/sandfly-setup/blob/master/sandfly.agent.sha512.txt);
 vhashes512=$(awk '{print $1}' <<EOF
-69a58538b99ab89a9f13ae1a5d89ae2eb2970878c899e03c76954284e650239183c2f9feeefa42fa5bcaaf1510a617ba9e06ceae3c6f1da00f27ba75d3178375 *sandfly.386
-9babfd742f384873f9da37f91f5a708f52982ff066ea92bd607ae182ce420a8ce0ca39eb381639c5fb6a786513e6eb7ac4db44d09acf8e54ddad18e651cb8acb *sandfly.amd64
-763a90e4d7b7d5d217bc06b2ca42f6de02557796d9ab22040a59e9dc4e44db34bc1c9c4de408c48c24163419727e31fa7c4e64b00ba47606b062ebd0d4d2e92d *sandfly.arm
-eff96f49b6e8cedd1c03ffcfd5407f0f46e95c2c4cd7fb609cc6bb4cd7107b346b4e7ab96f3f63ba620e8a3f37f7f2bd973b842a644be13d87cd915aad2e34d6 *sandfly.arm5
-944bb197483967b12ddfed9fa951f3a3577fcb752ed19da2ba5281d44c5deeb65b70c669017e02199d68cfde225dd1040aa70f87d2f8a59eff5d05767f6961cb *sandfly.arm6
-cbe38e675ca43a0a775d89aebbdef856944c0d5933a25dec3c029fa64912740fd688c7cc53b27fa1a5f22fa985a0ba21fb4156de96542980e2421d2d9c572513 *sandfly.arm64
-2049944854a5effa77e7bbbfbc6823bf604c31bb0853addc4b9836af7c66c1c5192892be2e864b31df2890174ed0b5ba38cd606dd678579f05c728c15c764ec3 *sandfly.arm7
-af022e5423e409b597b63649a24755b9b2d607fc73b8fdfc5fb657a0a23e4eee5b89b824a9bcd335218281dd1ebdfc24fb583c8a2a2cc0520fd4e59a3059aa8c *sandfly.mips
-55bfb49044bc36e738e86e267edf994d2a6ed51e4d93a5e48d74cc1c61fddd83bb145348f817f82ea212186f68ddb0552ee1d02d581fe9e717c5a2bd46c93928 *sandfly.mips64
-81122bdaf3401dfc80da154716ab19d2aea0a75ae36420eeb7c4ba633b003d3ed1c157aa1fb14e5efd95901d1778cf4935ed07db120e1d0b9a9a11febf3fb543 *sandfly.mips64le
-72d582d3da3bbbdcbffa7ed49fc6bf1d5e03fedae05e1d82e5e0c5535c684dc92152d4a2e48af6c35980eca263a5eb6b4be02a6c32a91e61bbcb77b08892f355 *sandfly.mipsle
-60d40155b019a34a284b9a112201883c0003e524c46b5d660943b87e0f33280ebf12a9ddf9869d0548c5512841c1dd8b1abb4213219a4f4f3597d8ace6156fce *sandfly.ppc64le
-fe55a8d00ab8e14c696e370e4fa7866e6ac6d976ecaf2c7440c06ec87068cedb2f7f80ab3d83cd7932e728dbb37e9d004813410c60b7e0a6782ec2e4b1d2370e *sandfly.s390x
+d25b24c65d9c6e9ed508d1a1af1ac5d43c23685579bd7227f24ff8add1ffb5cb06b78d4c282a26478efc24e70d8760ddd86ae01af4779ec4be32a55e0fcdf71f *sandfly.386
+a9604b5f514aba796acc768e2b9b4dc2945ef0043773916855ce2f6c7ba41d91840080e0fc192e766331f78e1f162f1dd982182c4caf25b970a7855ccb77359b *sandfly.amd64
+d5112d821263db811b87cff76cf8edbf93d9d6f207543f71aa4927ec0cdf5ff46fa0f22fcf323d9d2ecec8f26f769699b4c353166b0331929f58c46497863aa8 *sandfly.arm
+8b47b935a68aa01c524a3d2fa7bbec2edaedf63a3bfd032fa609752ee9c25c3417036c739ef5278cf0019d23a782c29b5426a61777d7da49f979e082ea25e6ce *sandfly.arm5
+a7d07605fd836771565fce9649e241cfa17a2b9a68a71c3a91bbeb601c9e93ebf101e5ceed14a4a4ee10d8cbbcfd07a6b6de1b220d3dcdc5a9ee1e512d802e54 *sandfly.arm6
+7c493fef518d64881c93c3ebdd44e8d1516d27bbb8b746852170f705df39f38c3fc4e692555927f5c09dbd7598d1a5bd069200f8f2d8b330418074fd9ac98927 *sandfly.arm64
+bef4779a4de467f8a16a9d718cf229501728116c6d9b4636d4eee4bf12a93b066f9c5c59bfb21b6157bb587c8e768972db5a194c7588229f22d25647945cf43b *sandfly.arm7
+9a0fa1856f4f7678fa9a9e6b4c48980fa983f761ccc6a26dd4cb7bac015e85048f8bf140eb4b0c5922d3d7b4a0a66db49b520191f32a6d215ab610cdfe17a6f0 *sandfly.mips
+1ad5e99c4b1b8c9286e5b1eadec24acb746acd0b476e6a4ab69f2152994ed4f865d0cc31ffcb7267f8fc0c422858097dca9346fab63ee7e30c616ca54f972f25 *sandfly.mips64
+70afe35bac14cb39e5ca8a7d185f42326c36c1cb540100312242c95672a857a0d8d8107ecff74202a26f814fc3d5ebf2ec099958dd4100bae16784e998365cd7 *sandfly.mips64le
+e55d84055d2955d85e7abcb8e1447ceaf42d1decac8971cf33bfd7b8c738cb1c0d2677a8df16ebadaeb49e00be9957cf61cfd726c8c55c3eabe710dfbf3b842b *sandfly.mipsle
+cb4e95125995a607307e8e742b9f016c8200b3dfb5393e1a0990fb17645bb511bf80c6d77f0a8d7723860af9983533afac73800dde522fed26baa7fab6b1dde5 *sandfly.ppc64le
+440a86bd3192f90454350cac299d857dddb6d0152e66eb68d9def9e856ebc7d86967eb6b2d782db8b0dfed19d7ea9d50e4a1e5e8dc80a562548a95a8536ec698 *sandfly.s390x
 EOF
 )
 
-cmd="${SSH_ORIGINAL_COMMAND//$'\t'/}"
-cmd="${cmd//\| \\$'\n'/| }"
-cmd="${cmd//sh \\$'\n'/sh }"
-exec_cmd="${cmd// \\ echo/echo}"
+cmd="${SSH_ORIGINAL_COMMAND//$'\t'/}" 
+cmd="${cmd//\| \\$'\n'/| }" 
+exec_cmd="${cmd}"
 cmd="${cmd//; \\/}"
-cmd="${cmd//null \\ |/null |}" # ignore stray "\ |" when checking OS_ENDIAN_USR_BIN (introduced in 5.1.1)
+cmd="${cmd//sh \\$'\n'/sh }"
 
 function validate () {
-    input=$1
-    rex_1="^echo \"[A-Z_]+\"\s*$"
-    rex_2="^echo \"[A-Z_]+=\\$\((|/bin/|/usr/bin/)(pwd|id|uname)\s+(|(-u|-m)\s+)2>/dev/null\)\"\s*$"
-    rex_3="^echo \"[A-Z_]+=\\$\(which\s+(cat|ls|rm)\s+2>/dev/null\)\"\s*$"
-    rex_4="^echo \"[A-Z_]+=\\$\((|/bin/|/usr/bin/)head\s+-c\s*6\s+(|/bin/|/usr/bin/)ls\s+2>/dev/null\s*\|\s*(|/bin/|/usr/bin/)tail\s+-c\s*1\s+2>/dev/null\s*\|\s*(|/bin/|/usr/bin/)tr\s+\"\\\001\\\002\"\s+\"LB\"\s+2>/dev/null\)\"\s*$"
-    rex_5="^echo \"[A-Z_]+=\\$\(head\s+-c\s*6\s+\\$\(which\s+ls\s+2>/dev/null\)\s+2>/dev/null\s+\|\s+tail\s+-c\s*1\s+2>/dev/null\s+\|\s+\tr\s+\"\\\001\\\002\"\s+\"LB\"\s+2>/dev/null)\"\s*$"
-    rex_6="^mkdir\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}.\s+&&\s+chmod\s+700\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}.\s*$"
-    rex_7="^(|/bin/|/usr/bin/)cat\s+>\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s+&&\s+chmod\s+500\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s*$"
-    rex_8="^LANG=C\s+sudo\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+.cd\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}..\s+&&\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames)..\s+.[-\ a-z0-9]+.\s*$"
-    rex_9="^cd\s+.$HOME.\s+&&\s+.(|/bin/|/usr/bin/)ls.\s+-1d\s+([ TZ.a-f0-9/]+|\*/)\s*$"
-    rex_10="^LANG=C\s+sudo\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s+-x\s+.(|$HOME/)[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}..\s*$"
-    rex_11="^LANG=C\s+sudo\s+-S\s+(|/bin/|/usr/bin/)id\s*$"
-    rex_12="^LANG=C\s+sudo\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+..(|/bin/|/usr/bin/|)rm.\s+-rf\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}.."
-    rex_13="^LANG=C\s+sudo\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+...$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames)..\s+-k\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames)\.pid...\s*$"
-    if [[ $input =~ $rex_1 || $input =~ $rex_2 || $input =~ $rex_3 || $input =~ $rex_4 ||$input =~ $rex_5 ||
-          $input =~ $rex_6 || $input =~ $rex_7 || $input =~ $rex_8 || $input =~ $rex_9 || $input =~ $rex_10 ||
-          $input =~ $rex_11 || $input =~ $rex_12 || $input =~ $rex_13 ]]
-    then
-        :
-    else
-        logger "$(basename $0) fail: input did not pass command whitelist"
-        exit 1
-    fi
+    local input="$1"
+    local regexes=(
+        "^echo\s+\"[A-Z_]+\"\s*$"
+        "^echo\s+\"[A-Z_]+=\\$\((|/bin/|/usr/bin/)(pwd|id|uname)\s+(|(-u|-m)\s+)2>/dev/null\)\"\s*$"
+        "^echo\s+\"OS_BITS_[A-Z_]+=\\$\((|/bin/|/usr/bin/)head\s+-c\s*5\s+(|/bin/|/usr/bin/)(env|ls)\s+2>/dev/null\s*\|\s*(|/bin/|/usr/bin/)tail\s+-c\s*1\s+2>/dev/null\s*\|\s*(|/bin/|/usr/bin/)tr\s+\"\\\001\\\002\"\s+\"36\"\s+2>/dev/null\)\"\s*$"
+        "^echo\s+\"OS_ENDIAN_[A-Z_]+=\\$\((|/bin/|/usr/bin/)head\s+-c\s*6\s+(|/bin/|/usr/bin/)(env|ls)\s+2>/dev/null\s*\|\s*(|/bin/|/usr/bin/)tail\s+-c\s*1\s+2>/dev/null\s*\|\s*(|/bin/|/usr/bin/)tr\s+\"\\\001\\\002\"\s+\"LB\"\s+2>/dev/null)\"\s*$"
+        "^echo\s+\"[A-Z_]+=\\$\(if\s+\[\s+-x\s+/usr/bin/(cat|ls|rm)\s+\];\s*then\s+echo\s+'/usr/bin/(cat|ls|rm)'\s*$"
+        "^elif\s+\[\s+-x\s+/bin/cat\s+\];\s*then\s+echo\s+'/bin/cat'\s*$"
+        "^else\s+echo\s+'cat';\s*fi\)\"\s*$"
+        "^elif\s+\[\s+-x\s+/bin/(ls|rm)\s+\];\s*then\s+echo\s+'/bin/(ls|rm)';\s*else\s+echo\s+'(ls|rm)';\s*fi\s*\)\"\s*$"
+        "^echo\s+\"[A-Z_]+=\\$\(if\s+\[\s+-x\s+/usr/bin/sudo\s+\]\s*$"
+        "^then\s+echo\s+'/usr/bin/sudo'\s*$"
+        "^elif\s+\[\s+-x\s+/bin/sudo\s+\];\s*then\s+echo\s+'/bin/sudo'\s*$"
+        "^elif\s+\[\s+-x\s+/usr/local/bin/sudo\s+\]\s*$"
+        "^then\s+echo\s+'/usr/local/bin/sudo';\s*fi\)\"\s*$"
+        "^mkdir\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}.\s+&&\s+chmod\s+700\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}.\s*$"
+        "^(|/bin/|/usr/bin/)cat\s+>\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s+&&\s+chmod\s+500\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s*$"
+        "^LANG=C\s+[\"](|/bin/|/usr/bin/)sudo[\"]\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+.cd\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}..\s+&&\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames)..\s+.[-\ a-z0-9]+.\s*$"
+        "^cd\s+.$HOME.\s+&&\s+.(|/bin/|/usr/bin/)ls.\s+-1d\s+([ TZ.a-f0-9/]+|\*/)\s*$"
+        "^LANG=C\s+[\"](|/bin/|/usr/bin/)sudo[\"]\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames).\s+-x\s+.(|$HOME/)[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}..\s*$"
+        "^LANG=C\s+[\"](|/bin/|/usr/bin/)sudo[\"]\s+-S\s+(|/bin/|/usr/bin/)id\s*$"
+        "^LANG=C\s+[\"](|/bin/|/usr/bin/)sudo[\"]\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+..(|/bin/|/usr/bin/|)rm.\s+-rf\s+.$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}.."
+        "^LANG=C\s+[\"](|/bin/|/usr/bin/)sudo[\"]\s+-S\s+LANG=C\s+/bin/sh\s+-c\s+...$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames)..\s+-k\s+..$HOME/[0-9]{8}T[0-9]{6}Z\.[a-f0-9]{16}/($agentbinarynames)\.pid...\s*$"
+    )
+    for rex in "${regexes[@]}"; do
+        if [[ $input =~ $rex ]]; then
+            return 0
+        fi
+    done
+    return 1
 }
 
 while IFS= read -r line
 do
     if [[ ! $line == "" ]]; then
         validate "$line"
+        if [[ $? -eq 1 ]]; then
+            logger "$(basename $0) fail: input did not pass command whitelist"
+            exit 1
+        fi
     fi
 done <<< "$cmd"
 
