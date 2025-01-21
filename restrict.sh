@@ -4,7 +4,7 @@
 ##
 ## version 5.3.0.0 // th(at)bogus.net
 ##
-## Copyright 2024 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
+## Copyright 2024-2025 Tor Houghton // released under the Simplified 2-Clause BSD Licence (https://opensource.org/licenses/BSD-2-Clause)
 ##
 ## Change this to your alternative agent binary names, if in use in the Server configuration:
 #agentbinarynames="sandfly"
