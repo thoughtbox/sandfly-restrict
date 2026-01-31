@@ -22,7 +22,7 @@ from="172.16.16.0/29",command="/usr/local/bin/restrict.sh",no-agent-forwarding,n
 Sandfly supports the use of random binary names to reduce detection. If you use this feature, this script requires some tweaking of the regular expression matching (look for "botfly" within the script and take it from there). 
 
 # compatibility
-This version has been tested to work with Sandfly version 5.5.4; AKA "it works for me". 
+This version has been tested to work with Sandfly version 5.6; AKA "it works for me". 
 
 # end note
 I have no affiliation with Sandfly Security, Ltd.; I merely find the product interesting.
